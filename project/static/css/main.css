@@ -1,0 +1,36 @@
+.ng-invalid .ng-dirty {
+    border: 1px solid red;
+}
+
+.ng-valid .ng-dirty {
+    border: 1px solid green;
+}
+
+.form {
+    border: none;
+}
+
+.error-msg {
+    color: red;
+}
+
+.success-msg {
+    color: green;
+}
+
+.warning-msg {
+    color: orangered;
+}
+
+.info-msg {
+    color: dodgerblue;
+}
+
+.done {
+    color: green;
+}
+
+legend {
+    color: dodgerblue;
+}
+

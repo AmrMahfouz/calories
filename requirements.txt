@@ -1,0 +1,11 @@
+Django==1.7
+django-allauth==0.18.0
+django-tastypie==0.12.0
+oauthlib==0.6.3
+psycopg2==2.5.4
+httplib2==0.9
+
+# In order to support full ouath2 with tastypie we need some extra libraries.
+# Read more at: http://ianalexandr.com/blog/building-a-true-oauth-20-api-with-django-and-tasty-pie.html
+django-oauth2-provider==0.2.6.1
+

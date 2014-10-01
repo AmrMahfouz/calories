@@ -1,0 +1,144 @@
+<div class="row" ng-init="initial()">
+    <div class="col-md-12 well">
+        <form class="form" name="form" ng-submit="addTodo()">
+            <div class="form-group col-md-6">
+                <label>Title</label>
+                <input name="title" type="text" class="form-control" placeholder="Title" ng-model="todo.title" ng-maxlength="50" required/>
+                <div ng-show="form.title.$dirty && form.title.$invalid">
+                    <p class="error-msg" ng-show="form.title.$error.required">This field is required.</p>
+                    <p class="error-msg" ng-show="form.title.$error.maxlength">Wow! it cannot be so large, maximum 50 characters.</p>
+                </div>
+            </div>
+            <div class="form-group col-md-4">
+                <div id="datetimepicker1" class="input-append date row" datetimez ng-model="todo.due_date">
+                    <div class="col-md-12">
+                        <label>Due Date</label>
+                    </div>
+                    <div class="col-md-11" >
+                        <input class="form-control" data-format="dd/MM/yyyy hh:mm:ss" type="text"/>
+                    </div>
+                    <div class="col-md-1 pull-left">
+                        <span class="add-on">
+                          <i data-time-icon="glyphicon glyphicon-time" data-date-icon="glyphicon glyphicon-calendar">
+                          </i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group col-md-1 pull-right">
+                <label>Priority</label>
+                <input name="priority" type="number" class="form-control" placeholder="10" ng-model="todo.priority" min="1" max="100" value="10"/>
+                <div ng-show="form.priority.$dirty && form.priority.$invalid">
+                    <p class="error-msg" ng-show="form.priority.$error.required">This field is required.</p>
+                    <p class="error-msg" ng-show="form.priority.$error.maxlength">Wow! it cannot be so large, maximum 50 characters.</p>
+                </div>
+            </div>
+            <div class="form-group col-md-12">
+                <label>Description</label>
+                <textarea name="description" class="form-control" ng-model="todo.description" ng-maxlength="300"></textarea>
+                <div ng-show="form.description.$dirty && form.description.$invalid">
+                    <p class="error-msg" ng-show="form.description.$error.maxlength">Wow! it cannot be so large, maximum 300 characters.</p>
+                </div>
+            </div>
+            <div class="checkbox col-md-4">
+                <label>
+                    <input name="completed" type="checkbox" ng-model="todo.completed"/> Completed
+                </label>
+            </div>
+            <div class="col-md-2 pull-right">
+                <button type="submit" class="btn btn-block btn-primary" ng-disabled="form.$invalid">Add Item</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-12 well" ng-show="user_msg" class="user-message" id="user-msg">
+        <div class="row">
+            <div class="col-md-10">
+                <h4>{{ user_msg }}</h4>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-danger btn-xs pull-right" ng-click="user_msg=null;">X</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <button class="btn btn-block btn-info btn-xs" ng-click="predicate='priority'; reverse=!reverse">Oder by priority<b ng-show="!reverse && predicate==='priority'"> ^</b><b ng-show="reverse && predicate==='priority'"> v</b></button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <button class="btn btn-block btn-warning btn-xs" ng-click="predicate='due_date'; reverse=!reverse">Oder by due date<b ng-show="!reverse && predicate==='due_date'"> ^</b><b ng-show="reverse && predicate==='due_date'"> v</b></button>
+                </div>
+            </div>
+            <div class="col-md-12 well" ng-repeat="item in todo_list | orderBy:predicate:reverse" ng-controller="ItemController as ItemCtrl" ng-init="init(item)" id="item-{{ item.id }}">
+                <div class="row" ng-show="!edit_view">
+                    <div class="col-md-10">
+                        <legend ng-class="{done: item.completed}">[{{ item.priority }}] {{ item.title }}<span ng-show="item.due_date"> ({{ item.due_date | date :'dd/MM/yyyy @ h:mma' }})</span></legend>
+                        <p>{{ item.description }}</p>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" value="done" class="btn btn-block btn-success" ng-show="!item.completed" ng-click="markAsDone()">Mark as done</button>
+                        <button type="submit" value="done" class="btn btn-block btn-info" ng-show="item.completed" ng-click="markAsUndone()">Mark as Undone</button>
+                        <button type="submit" value="edit" class="btn btn-block btn-primary" ng-click="editItem()">Edit</button>
+                        <button type="submit" value="delete" class="btn btn-block btn-danger" ng-click="deleteItem()">Delete</button>
+                    </div>
+                </div>
+                <div class="row" ng-show="edit_view">
+                    <form class="form" name="form" ng-submit="save()">
+                        <div class="form-group col-md-6">
+                            <label>Title</label>
+                            <input name="title" type="text" class="form-control" placeholder="Title" ng-model="item.title" value="{{ item.title }}" ng-maxlength="50" required/>
+                            <div ng-show="form.title.$dirty && form.title.$invalid">
+                                <p class="error-msg" ng-show="form.title.$error.required">This field is required.</p>
+                                <p class="error-msg" ng-show="form.title.$error.maxlength">Wow! it cannot be so large, maximum 50 characters.</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <div id="datetimepicker1" class="input-append date row" datetimez ng-model="todo.due_date">
+                                <div class="col-md-12">
+                                    <label>Due Date</label>
+                                </div>
+                                <div class="col-md-11" >
+                                    <input class="form-control" data-format="dd/MM/yyyy hh:mm:ss" type="text" value="{{ item.due_date | date :'dd/MM/yyyy  HH:mm:ss' }}"/>
+                                </div>
+                                <div class="col-md-1 pull-left">
+                                    <span class="add-on">
+                                      <i data-time-icon="glyphicon glyphicon-time" data-date-icon="glyphicon glyphicon-calendar">
+                                      </i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-1 pull-right">
+                            <label>Priority</label>
+                            <input name="priority" type="number" class="form-control" placeholder="10" ng-model="item.priority" min="1" max="100" value="{{ item.priority }}">
+                            <div ng-show="form.priority.$dirty && form.priority.$invalid">
+                                <p class="error-msg" ng-show="form.priority.$error.required">This field is required.</p>
+                                <p class="error-msg" ng-show="form.priority.$error.maxlength">Wow! it cannot be so large, maximum 50 characters.</p>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-12">
+                            <label>Description</label>
+                            <textarea name="description" class="form-control" ng-model="item.description" ng-maxlength="300">{{ item.description }}</textarea>
+                            <div ng-show="form.description.$dirty && form.description.$invalid">
+                                <p class="error-msg" ng-show="form.username.$error.maxlength">Wow! it cannot be so large, maximum 300 characters.</p>
+                            </div>
+                        </div>
+                        <div class="checkbox col-md-4">
+                            <label>
+                                <input name="completed" type="checkbox" ng-model="item.completed" value="{{ item.completed }}"> Completed
+                            </label>
+                        </div>
+                        <div class="col-md-2 pull-right">
+                            <button type="submit" class="btn btn-block btn-success" ng-disabled="form.$invalid">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
