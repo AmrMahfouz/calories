@@ -1,9 +1,16 @@
 from django.contrib import admin
-from .models import UserProfile
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin
+from base.models import UserProfile
+
+admin.site.unregister(User)
 
 
-class UserProfileAdmin(admin.ModelAdmin):
-    pass
+class UserProfileInline(admin.StackedInline):
+    model = UserProfile
 
 
-admin.register(UserProfile, UserProfileAdmin)
+class UserProfileAdmin(UserAdmin):
+    inlines = (UserProfileInline, )
+
+admin.site.register(User, UserProfileAdmin)

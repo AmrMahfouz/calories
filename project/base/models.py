@@ -8,8 +8,8 @@ PROJECT_URL = getattr(settings, 'PROJECT_URL', 'http://localhost')
 
 
 class UserProfile(models.Model):
-    user = models.OneToOneField('auth.User')
-    expected_calories = models.PositiveIntegerField(blank=True, null=True)
+    user = models.OneToOneField('auth.User', related_name='userprofile')
+    expected_calories = models.PositiveIntegerField(default=0)
 
 
 def create_user_profile(sender, instance, created, **kwargs):

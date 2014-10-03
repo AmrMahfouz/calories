@@ -2,11 +2,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from tastypie.api import Api
 from calories.api import MealResource
-from base.api import UserResource, UserProfileResource
+from base.api import UserResource
 
 v1_api = Api(api_name='v1')
 v1_api.register(UserResource())
-v1_api.register(UserProfileResource())
 v1_api.register(MealResource())
 
 urlpatterns = patterns('',

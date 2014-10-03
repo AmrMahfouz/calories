@@ -33,7 +33,7 @@ app.controller('HomeController', ['$scope', '$http', function($scope, $http) {
     $scope.initial = function (){
         $http({
             method: 'GET',
-            url: '/api/v1/item/?format=json'
+            url: '/api/v1/meal/?format=json'
         }).success(function(data, status, headers) {
                 $scope.todo_list = data.objects;
         }).error(function(data, status, headers) {
@@ -172,11 +172,23 @@ app.controller('ItemController', ['$scope', '$http', function($scope, $http) {
     };
 }]);
 
+app.controller('ApiController', ['$scope', '$http', function($scope, $http) {
+    $scope.refreshToken = function() {
+        $http({
+            method: 'GET',
+            url: '/api/v1/user/?format=json'
+        }).success(function(data, status, headers) {
+                $scope.settings = data.objects[0];
+        }).error(function(data, status, headers) {
+                console.log("Error trying to get user settings!" + status + headers);
+        });
+    };
+}]);
 
 app.controller('SettingsController', ['$scope', '$http', function($scope, $http) {
-    $scope.settings = {name: "Fedex",
-                       email: "fmc0208@gmail.com",
-                       expected_calories: "3000"};
+    $scope.settings = {name: "",
+                       email: "",
+                       expected_calories: 0};
 
     $scope.initial = function () {
         $http({
@@ -192,12 +204,12 @@ app.controller('SettingsController', ['$scope', '$http', function($scope, $http)
     $scope.save = function () {
         $http({
             method: 'PUT',
-            url: '/api/v1/user/'+ $scope.settings.id +'?format=json',
+            url: '/api/v1/user/'+ $scope.settings.username +'?format=json',
             data: $scope.settings
         }).success(function(data, status, headers) {
                 console.log("User settings saved!" + status + headers);
         }).error(function(data, status, headers) {
-                console.log("Error trying to markAsDone item!" + status + headers);
+                console.log("Error trying to save user settings!" + status + headers);
         });
     };
 }]);

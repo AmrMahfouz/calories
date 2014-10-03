@@ -5,7 +5,7 @@
             <p>Hello this is <b ng-show="settings.username">{{ settings.username }} </b><b ng-show="!settings.username">?? </b>
                 <p>If you would like to contact me, you could send me an email to: <b>{{ settings.email }}</b>, Let's keep in touch!</p>
         </div>
-        <div class="well" ng-repeat="client in settings.clients">
+        <div class="well" ng-repeat="client in settings.clients" ng-controller="ApiClient">
             <h3>{{ client.name }}</h3>
             <p><b>URL:</b> {{ client.url }}</p>
             <p><b>Client ID:</b> {{ client.client_id }}</p>
@@ -34,7 +34,7 @@
             </div>
             <div class="form-group">
                 <label>Expected Calories</label>
-                <input name="expected_calories" type="text" class="form-control" placeholder="i.e: 3000" ng-model="settings.expected_calories" value="{{ settings.expected_calories }}">
+                <input name="expected_calories" type="text" class="form-control" placeholder="i.e: 3000" ng-model="settings.expected_calories" value="{{ settings.userprofile.expected_calories }}">
             </div>
             <button type="submit" class="btn btn-block btn-primary" ng-disabled="form.$dirty && form.$invalid">Save</button>
         </form>
